@@ -1,0 +1,71 @@
+import csv
+import sys
+
+# infile = sys.argv[1]
+
+class fileReader:
+    rawdata=[]
+    tcpdata=[]
+    ftpdata=[]
+    csv_sep=""
+    fname=""
+
+    srciplist=[]
+    destiplist=[]
+
+    tcpflows={} #(src_ip,src_p,dst_ip,dst_p):rows
+
+    def __init__(self,filename,sep=","):
+        self.fname = filename
+        self.csv_sep = sep
+        self.create_data()
+        self.generate_TCP_flows()
+
+    def create_data(self):
+        with open(self.fname,'r') as f:
+            data=csv.reader(f,delimiter=self.csv_sep)
+            for x in data:
+                self.rawdata.append(x)
+                if (x[4] == "TCP"):
+                    self.tcpdata.append(x)
+                else:
+                    self.ftpdata.append(x)
+            # self.rawdata = [x for x in data]
+            # self.tcpdata = [x if x[4] == "TCP" for x in data]
+            # self.ftpdata = [x if x[4] == "FTP" for x in data]
+
+    def generate_TCP_flows(self):
+        for row in self.tcpdata:
+            src_ip = row[2]
+            dst_ip = row[3]
+            relevant_string = ""
+            for s in row[6]:
+                if s != "[":
+                    relevant_string+=s
+                else:
+                    break
+            prt_l = [x.strip(" ") for x in relevant_string.split(">")]
+            src_p = prt_l[0]
+            dst_p = prt_l[1]
+            dict_key = (src_ip,src_p,dst_ip,dst_p)
+
+            if src_ip not in self.srciplist:
+                self.srciplist.append(src_ip)
+            if dst_ip not in self.destiplist:
+                self.destiplist.append(dst_ip)
+
+
+            if (dict_key in self.tcpflows):
+                self.tcpflows[dict_key].append(row) #Add a new packet to a flow
+            else:
+                self.tcpflows[dict_key] = row #Add the first packet to the flow
+
+
+
+
+    # def info_parser(self):
+    #     for row in self.rawdata:
+    #         if (row[5] == "TCP"):
+    #
+    #
+    #     pass
