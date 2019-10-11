@@ -16,7 +16,7 @@ class fileReader:
     serverips=[]
     clientips=[]
 
-    tcpflows={} #(src_ip,src_p,dst_ip,dst_p):rows
+    tcpflows={} #(src_ip,src_p,dst_ip,dst_p):[list of connections(SYN,ACK,FIN,RST)]
 
     def __init__(self,filename,sep=","):
         self.fname = filename
@@ -36,6 +36,7 @@ class fileReader:
             # self.rawdata = [x for x in data]
             # self.tcpdata = [x if x[4] == "TCP" for x in data]
             # self.ftpdata = [x if x[4] == "FTP" for x in data]
+    # def
 
     def generate_TCP_flows(self):
         for row in self.tcpdata:
@@ -70,11 +71,10 @@ class fileReader:
             if dst_ip not in self.destiplist:
                 self.destiplist.append(dst_ip)
 
-            if (dict_key in self.tcpflows):
-                self.tcpflows[dict_key].append(row) #Add a new packet to a flow
-            else:
+            if (dict_key not in self.tcpflows):
                 self.tcpflows[dict_key] = []
-                self.tcpflows[dict_key].append(row) #Add the first packet to the flow
+
+            self.tcpflows[dict_key].append(row) #Add the first packet to the flow
 
 
     # def info_parser(self):
