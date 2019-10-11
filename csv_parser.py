@@ -36,7 +36,8 @@ class fileReader:
             # self.rawdata = [x for x in data]
             # self.tcpdata = [x if x[4] == "TCP" for x in data]
             # self.ftpdata = [x if x[4] == "FTP" for x in data]
-    # def
+    def generate_duration_flow(four_tuple):
+        pass
 
     def generate_TCP_flows(self):
         for row in self.tcpdata:
@@ -64,6 +65,7 @@ class fileReader:
                     self.serverips.append(dst_ip)
 
             dict_key = (src_ip,src_p,dst_ip,dst_p)
+            flip_key = (dst_ip,dst_p,src_ip,src_p)
 
             if src_ip not in self.srciplist:
                 self.srciplist.append(src_ip)
@@ -71,10 +73,15 @@ class fileReader:
             if dst_ip not in self.destiplist:
                 self.destiplist.append(dst_ip)
 
-            if (dict_key not in self.tcpflows):
+            if (dict_key not in self.tcpflows and flip_key not in self.tcpflows):
                 self.tcpflows[dict_key] = []
+                self.tcpflows[dict_key].append(row)
+            elif (flip_key not in self.tcpflows):
+                self.tcpflows[dict_key].append(row)
+            else:
+                self.tcpflows[flip_key].append(row)
 
-            self.tcpflows[dict_key].append(row) #Add the first packet to the flow
+            # self.tcpflows[dict_key].append(row) #Add the first packet to the flow
 
 
     # def info_parser(self):
