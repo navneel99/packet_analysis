@@ -13,6 +13,9 @@ class fileReader:
     srciplist=[]
     destiplist=[]
 
+    serverips=[]
+    clientips=[]
+
     tcpflows={} #(src_ip,src_p,dst_ip,dst_p):rows
 
     def __init__(self,filename,sep=","):
@@ -47,20 +50,31 @@ class fileReader:
             prt_l = [x.strip(" ") for x in relevant_string.split(">")]
             src_p = prt_l[0]
             dst_p = prt_l[1]
+
+            if src_p == "21":
+                if src_ip not in self.serverips:
+                    self.serverips.append(src_ip)
+                if dst_ip not in self.clientips:
+                    self.clientips.append(dst_ip)
+            elif dst_p == "21":
+                if src_ip not in self.clientips:
+                    self.clientips.append(src_ip)
+                if dst_ip not in self.serverips:
+                    self.serverips.append(dst_ip)
+
             dict_key = (src_ip,src_p,dst_ip,dst_p)
 
             if src_ip not in self.srciplist:
                 self.srciplist.append(src_ip)
+
             if dst_ip not in self.destiplist:
                 self.destiplist.append(dst_ip)
-
 
             if (dict_key in self.tcpflows):
                 self.tcpflows[dict_key].append(row) #Add a new packet to a flow
             else:
-                self.tcpflows[dict_key] = row #Add the first packet to the flow
-
-
+                self.tcpflows[dict_key] = []
+                self.tcpflows[dict_key].append(row) #Add the first packet to the flow
 
 
     # def info_parser(self):
