@@ -33,3 +33,7 @@ The fileReader object has attributes which help in generating plots and all that
 <table>
 <tr><th>packet_number</th><th>rel_time(from 0)</th><th>source_ip</th><th>destination_ip</th><th>protocol</th><th>packet_length</th><th>info</th></tr>
 </table>
+
+### Methods of the fileReader object
+
+generate_duration_flow(4-tuple): takes in a 4 tuple and generates a list with the durations.
