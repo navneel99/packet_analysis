@@ -18,11 +18,14 @@ class fileReader:
 
     tcpflows={} #(src_ip,src_p,dst_ip,dst_p):[list of connections(SYN,ACK,FIN,RST)]
 
+    new_connection_time = []
+
     def __init__(self,filename,sep=","):
         self.fname = filename
         self.csv_sep = sep
         self.create_data()
         self.generate_TCP_flows()
+        self.generate_inter_arrival_time()
 
     def create_data(self):
         with open(self.fname,'r') as f:
@@ -36,6 +39,14 @@ class fileReader:
             # self.rawdata = [x for x in data]
             # self.tcpdata = [x if x[4] == "TCP" for x in data]
             # self.ftpdata = [x if x[4] == "FTP" for x in data]
+
+    def generate_inter_arrival_time(self):
+        for row in self.tcpdata:
+            info = row[6]
+            det =  ([ y for m in ([x.split("[") for x in info.split("]")]) for y in m])[1].split(",")
+            if (len(det) == 1 and det[0] == "SYN"):
+                self.new_connection_time.append(row)
+
     def generate_duration_flow(self,four_tuple):
         flip_tuple = four_tuple[2],four_tuple[3],four_tuple[0],four_tuple[1]
         if (four_tuple in self.tcpflows.keys()):

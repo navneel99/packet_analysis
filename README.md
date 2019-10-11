@@ -28,6 +28,7 @@ The fileReader object has attributes which help in generating plots and all that
 <tr><td>serverips</td><td>list</td><td>Contains all the Unique Server IPs in the CSV</td></tr>
 <tr><td>clientips</td><td>list</td><td>Contains all the Unique Client IPs in the CSV</td></tr>
 <tr><td>tcpflows</td><td>Dictionary,(4-tuple):[Rows of Data]</td><td>Used for maintaining the TCP flows in the document</td></tr>
+<tr><td>new_connection_time</td><td>list</td><td>Adds a new row on encountering a new <b>SYN</b> packet.</td></tr>
 </table>
 <b>Each Row of Data is as follows:</b>
 <table>
