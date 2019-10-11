@@ -47,6 +47,17 @@ class fileReader:
             if (len(det) == 1 and det[0] == "SYN"):
                 self.new_connection_time.append(row)
 
+    def generate_server_inter_arrival_time(self):
+        # l = [row if (row[3] in self.serverips) else continue for row in self.new_connection_time]
+        siat=[] #server inter arrvial time
+        op = [] # Outgoing packet
+        for row in self.rawdata:
+            if row[3] in self.serverips:
+                siat.append(row)
+            if row[2] in self.serverips:
+                op.append(row)
+        return siat,op
+
     def generate_duration_flow(self,four_tuple):
         flip_tuple = four_tuple[2],four_tuple[3],four_tuple[0],four_tuple[1]
         if (four_tuple in self.tcpflows.keys()):
@@ -129,6 +140,47 @@ class fileReader:
             else:
                 curr_bytes+=int(curr_row[5])
         return bytes
+
+    def sequence_number_generator(self,four_tuple):
+        flip_tuple = four_tuple[2],four_tuple[3],four_tuple[0],four_tuple[1]
+        if (four_tuple in self.tcpflows.keys()):
+            rows = self.tcpflows[four_tuple]
+        elif(flip_tuple in self.tcpflows.keys()):
+            rows = self.tcpflows[flip_tuple]
+        else:
+            print("Wrong 4-tuple given.")
+            return None
+        syn_ack_flag = False
+        sql=[]
+        pack=[None,None,None,None] #Time_from_server,seq,Time_from_client,ack
+        for row in rows:
+            info = row[6]
+            info_break =  ([ y for m in ([x.split("[") for x in info.split("]")]) for y in m])
+            # print("info_break: ",info_break)
+            det = [x.strip(" ") for x in info_break[1].split(",")]
+            # print("det: ",det)
+            if (len(det) == 2 and det[0]=="SYN" and det[1]=="ACK") and syn_ack_flag == False:
+                numbers = [x.split("=") for x in info_break[2].split()]
+                # print("numbers: ",numbers)
+                syn_ack_flag = True
+                # cl_ip = row[3]
+                pack[0] = row[1]
+                for t in range(len(numbers)):
+                    if numbers[t][0]=="Seq":
+                        pack[1] = numbers[t][1]
+                        break
+            elif ((len(det) == 1 and det[0]=="ACK") or (len(det) == 2 and det[1] == "ACK")) and syn_ack_flag==True: #Ack and fin/ack
+                numbers = [x.split("=") for x in info_break[2].split()]
+                # print("numbers: ",numbers)
+                pack[2] = row[1]
+                for t in range(len(numbers)):
+                    if numbers[t][0] == "Ack":
+                        pack[3] = numbers[t][1]
+                        break
+                sql.append(pack)
+                pack = [None,None,None,None]
+                syn_ack_flag = False
+        return sql
 
     def generate_TCP_flows(self):
         for row in self.tcpdata:
