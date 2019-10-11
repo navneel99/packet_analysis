@@ -73,7 +73,8 @@ class fileReader:
             if (dict_key in self.tcpflows):
                 self.tcpflows[dict_key].append(row) #Add a new packet to a flow
             else:
-                self.tcpflows[dict_key] = row #Add the first packet to the flow
+                self.tcpflows[dict_key] = []
+                self.tcpflows[dict_key].append(row) #Add the first packet to the flow
 
 
     # def info_parser(self):
