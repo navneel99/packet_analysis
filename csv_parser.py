@@ -49,7 +49,6 @@ class fileReader:
         times = []
         for row_ind in range(len(rows)):
             curr_row = rows[row_ind]
-
             # info_split = [x.strip(" ") for x in curr_row[6].split()]
             info_split=""
             write=False
@@ -74,6 +73,51 @@ class fileReader:
             else:
                 continue
         return times
+
+    def generate_bytes_sent(self,four_tuple):
+        flip_tuple = four_tuple[2],four_tuple[3],four_tuple[0],four_tuple[1]
+        if (four_tuple in self.tcpflows.keys()):
+            rows = self.tcpflows[four_tuple]
+        elif(flip_tuple in self.tcpflows.keys()):
+            rows = self.tcpflows[flip_tuple]
+        else:
+            print("Wrong 4-tuple given.")
+            return None
+        syn_flag = False #flag is false if it hasn't encountered a SYN yet
+        bytes = []
+        curr_bytes=0
+        for row_ind in range(len(rows)):
+            curr_row = rows[row_ind]
+            info_split=""
+            write=False
+            for j in curr_row[6]:
+                if j=="[":
+                    write=True
+                if write:
+                    info_split+=j
+                if j=="]":
+                    write= False
+                    break
+            message = info_split.strip("[]").split(",")
+            if len(message) == 1 and message[0] == "SYN":
+                syn_flag = True
+                curr_bytes=int(curr_row[5])
+            elif message[0] == "FIN" and syn_flag == True:
+                curr_bytes+=int(curr_row[5])
+                bytes.append(curr_bytes)
+                curr_bytes = 0
+                syn_flag = False
+            elif message[0] == "RST":
+                curr_bytes+=int(curr_row[5])
+                if syn_flag: #Did not encounter FIN, ACK before, so new element
+                    bytes.append(curr_bytes)
+                else:   # WE had encountered FIN before, so add to the last element
+                    bytes[-1]+=curr_bytes
+                syn_flag = False
+                curr_bytes=0
+            else:
+                curr_bytes+=int(curr_row[5])
+        return bytes
 
     def generate_TCP_flows(self):
         for row in self.tcpdata:

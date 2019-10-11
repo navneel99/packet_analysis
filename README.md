@@ -36,4 +36,14 @@ The fileReader object has attributes which help in generating plots and all that
 
 ### Methods of the fileReader object
 
-generate_duration_flow(4-tuple): takes in a 4 tuple and generates a list with the durations.
+<table>
+<tr>
+<th>Function Name</th><th>Argument(s)</th><th>Returns</th><th>Description</th>
+</tr>
+<tr>
+<td>generate_duration_flow</td><td>4-tuple</td><td>list</td><td> Generates a list of connection durations.<i>Single Connection results in a list with 1 element</i></td>
+</tr>
+<tr>
+<td>generate_bytes_sent</td><td>4-tuple</td><td>list</td><td> Generates a list of bytes sent over each connection duration.<i>Single Connection results in a list with 1 element</i></td>
+</tr>
+</table>
