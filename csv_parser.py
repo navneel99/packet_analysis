@@ -91,9 +91,17 @@ class fileReader:
                 server_ip = curr_row[3]
                 client_ip = curr_row[2]
 
-            elif message[0] in ["RST","FIN"] and syn_flag == True:
+            # elif message[0] in ["RST","FIN"] and syn_flag == True:
+            elif message[0] == "FIN" and syn_flag == True:
                 syn_flag = False
                 times.append(float(curr_row[1]) - start_timer)
+                start_timer = 0
+            elif message[0] == "RST":
+                if (syn_flag):
+                    times.append(float(curr_row[1]) - start_timer)
+                    syn_flag = False
+                else:
+                    times[-1]+=(float(curr_row[1]) - start_timer)
             else:
                 continue
         return times
