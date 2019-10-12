@@ -44,6 +44,40 @@ def PlotFlow(t):
 
     Plotbar(x, y, "Time of Day", "Number of Connections", "Number of connections opened to any FTP server")       
 
+def PlotConDur(t):
+
+    # getting the list of keys
+    temp = t.tcpflows
+    d = list(temp.keys())
+
+    y = []
+    for i in range(len(d)):
+        duration = t.generate_duration_flow(d[i])
+        for j in range(len(duration)):
+            y.append(duration[j])
+
+    y.sort()
+    max_x = int(y[len(y)-1]+100)
+    x = range(max_x)
+
+    n = len(y)
+
+    yy = [0]*max_x
+
+    for i in range(max_x):
+        for j in range(n):
+            if(y[j]>i):
+                break
+            else:
+                yy[i] = yy[i] + 1
+        yy[i] = yy[i]/n
+    
+    print(len(x), len(yy))
+    print(y[len(y)-8])
+    plt.plot(x, yy)
+    plt.show()
+
+
 temp = cv.fileReader("lbnl.anon-ftp.03-01-11.csv")
 
-PlotFlow(temp)
+PlotConDur(temp)
