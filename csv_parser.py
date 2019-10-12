@@ -115,9 +115,22 @@ class fileReader:
         else:
             print("Wrong 4-tuple given.")
             return None
+
+        if (four_tuple[1] == "21"):
+            server = four_tuple[0]
+            client = four_tuple[2]
+        else:
+            server = four_tuple[2]
+            client = four_tuple[0]
+
         syn_flag = False #flag is false if it hasn't encountered a SYN yet
         bytes = []
+        cl_bytes = [] #Bytes to the client
+        ser_bytes = [] #Bytes to the server
         curr_bytes=0
+        curr_c_bytes = 0 #Bytes sent to the client
+        curr_s_bytes = 0 #Bytes sent to the server
+
         for row_ind in range(len(rows)):
             curr_row = rows[row_ind]
             info_split=""
@@ -134,24 +147,45 @@ class fileReader:
             if (len(message) == 1 and message[0] == "SYN") or (len(message) == 3 and message[0] == "SYN"):
                 syn_flag = True
                 curr_bytes=int(curr_row[5])
+                curr_s_bytes = int(curr_row[5])
+
             elif message[0] == "FIN" and syn_flag == True:
                 curr_bytes+=int(curr_row[5])
+                curr_c_bytes+=int(curr_row[5])
+                curr_s_bytes+=int(curr_row[5])
                 bytes.append(curr_bytes)
+                cl_bytes.append(curr_c_bytes)
+                ser_bytes.append(curr_s_bytes)
+                curr_c_bytes= 0
+                curr_s_bytes = 0
                 curr_bytes = 0
                 syn_flag = False
             elif message[0] == "RST":
                 curr_bytes+=int(curr_row[5])
+                curr_s_bytes+=int(curr_row[5])
+                curr_c_bytes+=int(curr_row[5])
                 if syn_flag: #Did not encounter FIN, ACK before, so new element
                     bytes.append(curr_bytes)
+                    ser_bytes.append(curr_s_bytes)
+                    cl_bytes.append(curr_c_bytes)
                 else:   # WE had encountered FIN before, so add to the last element
                     if (len(bytes) == 0): #Debugging code
                         print(four_tuple)
                     bytes[-1]+=curr_bytes
+                    ser_bytes[-1]+=curr_s_bytes
+                    cl_bytes[-1]+=curr_c_bytes
+
                 syn_flag = False
                 curr_bytes=0
+                curr_c_bytes=0
+                curr_s_bytes=0
             else:
+                if (curr_row[2] == server):
+                    curr_c_bytes+=int(curr_row[5])
+                else:
+                    curr_s_bytes+=int(curr_row[5])
                 curr_bytes+=int(curr_row[5])
-        return bytes
+        return bytes,ser_bytes,cl_bytes
 
     def sequence_number_generator(self,four_tuple):
         flip_tuple = four_tuple[2],four_tuple[3],four_tuple[0],four_tuple[1]
