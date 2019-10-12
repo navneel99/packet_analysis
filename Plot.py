@@ -77,7 +77,142 @@ def PlotConDur(t):
     plt.plot(x, yy)
     plt.show()
 
+#Question number 6
+def interarrivalCDF6(t):
+    inter_arrival = t.new_connection_time
+
+    y = []
+    n = len(inter_arrival)
+    for i in range(n-1):
+        temp = float(inter_arrival[i+1][1]) - float(inter_arrival[i][1])
+        y.append(temp)
+
+    y.sort()
+
+    sum = 0
+    n = len(y)
+    for i in range(n):
+        sum = sum + y[i]
+
+    mean = sum/n
+    median = y[int(n/2)]
+
+    print(mean)
+    print(median)
+
+    # Calculating CDF
+    max_x = int(y[n-1] + 10)
+    CDF = np.zeros(max_x)
+    for i in range(max_x):
+        count = 0
+        for j in range(n):
+            if(y[j]<=i):
+                count = count + 1
+            else:
+                break
+        CDF[i] = count
+
+    x = range(max_x)
+    plt.plot(x,CDF)
+    plt.show()
+
+    return y
+
+# Question number 7
+def interarrivalCDF7(t):
+    inter_arrival, t = t.generate_server_inter_arrival_time()
+
+    clist = []
+    
+    n = len(inter_arrival)
+    for i in range(n):
+        clist.append(float(inter_arrival[i][1]))
+    
+    clist.sort()
+
+    y = []
+    n = len(clist) - 1  
+    for i in range(n):
+        temp = clist[i+1] - clist[i]
+        y.append(temp)
+
+    y.sort()
+
+    sum = 0
+    n = len(y)
+    print(y[n-1])
+    for i in range(n):
+        sum = sum + y[i]
+
+    mean = sum/n
+    median = y[int(n/2)]
+
+    max_x = int(y[n-1] + 10)
+    CDF = np.zeros(max_x)
+    for i in range(max_x):
+        count = 0
+        for j in range(n):
+            if(y[j]<=i):
+                count = count + 1
+            else:
+                break
+        CDF[i] = count
+
+    x = range(max_x)
+    plt.plot(x,CDF)
+    plt.show()
+    # print(sum)
+    print(mean)
+    print(median)
+
+# Question number 8
+def interarrivalCDF8(t):
+    i, inter_arrival = t.generate_server_inter_arrival_time()
+
+    clist = []
+    
+    n = len(inter_arrival)
+    for i in range(n):
+        clist.append(float(inter_arrival[i][1]))
+    
+    clist.sort()
+
+    y = []
+    n = len(clist) - 1  
+    for i in range(n):
+        temp = clist[i+1] - clist[i]
+        y.append(temp)
+
+    y.sort()
+
+    sum = 0
+    n = len(y)
+    print(y[n-1])
+    for i in range(n):
+        sum = sum + y[i]
+
+    mean = sum/n
+    median = y[int(n/2)]
+
+    max_x = int(y[n-1] + 10)
+    CDF = np.zeros(max_x)
+    for i in range(max_x):
+        count = 0
+        for j in range(n):
+            if(y[j]<=i):
+                count = count + 1
+            else:
+                break
+        CDF[i] = count
+
+    x = range(max_x)
+    plt.plot(x,CDF)
+    plt.show()
+    # print(sum)
+    print(mean)
+    print(median)
+
 
 temp = cv.fileReader("lbnl.anon-ftp.03-01-11.csv")
 
-PlotConDur(temp)
+interarrivalCDF7(temp)
