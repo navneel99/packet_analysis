@@ -44,7 +44,8 @@ class fileReader:
         for row in self.tcpdata:
             info = row[6]
             det =  ([ y for m in ([x.split("[") for x in info.split("]")]) for y in m])[1].split(",")
-            if (len(det) == 1 and det[0] == "SYN"):
+            if (len(det) == 1 and det[0] == "SYN") or (len(det) == 3 and det[0] == "SYN"):
+            # if (len(det) == 1 and det[0] == "SYN"):
                 self.new_connection_time.append(row)
 
     def generate_server_inter_arrival_time(self):
@@ -83,7 +84,8 @@ class fileReader:
                     write= False
                     break
             message = info_split.strip("[]").split(",")
-            if len(message)== 1 and message[0] == "SYN":
+            if (len(message) == 1 and message[0] == "SYN") or (len(message) == 3 and message[0] == "SYN"):
+            # if len(message)== 1 and message[0] == "SYN":
                 syn_flag = True
                 start_timer = float(curr_row[1])
                 server_ip = curr_row[3]
@@ -121,7 +123,7 @@ class fileReader:
                     write= False
                     break
             message = info_split.strip("[]").split(",")
-            if len(message) == 1 and message[0] == "SYN":
+            if (len(message) == 1 and message[0] == "SYN") or (len(message) == 3 and message[0] == "SYN"):
                 syn_flag = True
                 curr_bytes=int(curr_row[5])
             elif message[0] == "FIN" and syn_flag == True:
@@ -134,6 +136,8 @@ class fileReader:
                 if syn_flag: #Did not encounter FIN, ACK before, so new element
                     bytes.append(curr_bytes)
                 else:   # WE had encountered FIN before, so add to the last element
+                    if (len(bytes) == 0): #Debugging code
+                        print(four_tuple)
                     bytes[-1]+=curr_bytes
                 syn_flag = False
                 curr_bytes=0
