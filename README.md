@@ -47,4 +47,10 @@ The fileReader object has attributes which help in generating plots and all that
 <tr>
 <td>generate_bytes_sent</td><td>4-tuple</td><td>list</td><td> Generates a list of bytes sent over each connection duration.<i>Single Connection results in a list with 1 element</i></td>
 </tr>
+<tr>
+<td>sequence_number_generator</td><td>4-tuple</td><td>list of (list of 4 elements)</td><td> Generates a list of list of 4 elements. The inner list,which has 4 elements is of the following format:
+ <b>[Time,Seq_num_server,Time,Ack_num_client]</b>.
+ 
+<i>Single Connection results in a list with 1 element</i></td>
+</tr>
 </table>

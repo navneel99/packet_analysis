@@ -156,14 +156,10 @@ class fileReader:
         for row in rows:
             info = row[6]
             info_break =  ([ y for m in ([x.split("[") for x in info.split("]")]) for y in m])
-            # print("info_break: ",info_break)
             det = [x.strip(" ") for x in info_break[1].split(",")]
-            # print("det: ",det)
             if (len(det) == 2 and det[0]=="SYN" and det[1]=="ACK") and syn_ack_flag == False:
                 numbers = [x.split("=") for x in info_break[2].split()]
-                # print("numbers: ",numbers)
                 syn_ack_flag = True
-                # cl_ip = row[3]
                 pack[0] = row[1]
                 for t in range(len(numbers)):
                     if numbers[t][0]=="Seq":
@@ -171,7 +167,6 @@ class fileReader:
                         break
             elif ((len(det) == 1 and det[0]=="ACK") or (len(det) == 2 and det[1] == "ACK")) and syn_ack_flag==True: #Ack and fin/ack
                 numbers = [x.split("=") for x in info_break[2].split()]
-                # print("numbers: ",numbers)
                 pack[2] = row[1]
                 for t in range(len(numbers)):
                     if numbers[t][0] == "Ack":
