@@ -48,9 +48,6 @@ The fileReader object has attributes which help in generating plots and all that
 <td>generate_bytes_sent</td><td>4-tuple</td><td>list</td><td> Generates a list of bytes sent over each connection duration.<i>Single Connection results in a list with 1 element</i></td>
 </tr>
 <tr>
-<td>sequence_number_generator</td><td>4-tuple</td><td>list of (list of 4 elements)</td><td> Generates a list of list of 4 elements. The inner list,which has 4 elements is of the following format:
- <b>[Time,Seq_num_server,Time,Ack_num_client]</b>.
- 
-<i>Single Connection results in a list with 1 element</i></td>
+<td>sequence_number_generator</td><td>4-tuple</td><td>Dictionary.Key with Sequence Number. Value as a list of 2 lists</td><td> Generates a dictionary. Key are the Sequence Number. The Values are a list of length 2. list[0] are the Syn-Ack packages while list[1] are the ack packages</td>
 </tr>
 </table>
