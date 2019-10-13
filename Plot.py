@@ -12,13 +12,13 @@ def Plotbar(x, y, labelx, labely, title, fsize = 5):
     plt.show()
 
 def UServerIP(t):
-    print(len(t.serverips))
+    print("Unique Server IPs are: ",len(t.serverips))
 
 def UClientIP(t):
-    print(len(t.clientips))
+    print("Unique Client IPs are: ",len(t.clientips))
 
 def UTCPFlow(t):
-    print(len(t.tcpflows))
+    print("Unique TCP Flows are: ",len(t.tcpflows))
 
 def PlotFlow(t):
     
@@ -165,7 +165,7 @@ def interarrivalCDF7(t):
     print(mean)
     print(median)
 
-# Question number 8
+# Interarrival time of outgoing packet
 def interarrivalCDF8(t):
     itemp, inter_arrival = t.generate_server_inter_arrival_time()
 
@@ -212,7 +212,6 @@ def interarrivalCDF8(t):
     print(mean)
     print(median)
 
-
 def GLenIncoming(t):
     inter, itemp = t.generate_server_inter_arrival_time()
 
@@ -229,15 +228,95 @@ def GLenIncoming(t):
     
     mean = sum/n
     median = clist[int(n/2)]
-    print("Mean of Incoming Length of the packet is: ",mean)
-    print("Median of Incoming Length of the packet is:", median)
+    print("Mean of Incoming Packet Length is: ",mean)
+    print("Median of Incoming Packet Length is: ", median)
 
-    max_x = clist[n-1]
+    max_x = int(clist[n-1]) + 10
     x = range(max_x)
+    y = []
 
+    for i in range(max_x):
+        sum = 0
+        for j in range(n):
+            if(clist[j] <= x[i]):
+                sum = sum + 1
+            else:
+                break
+        y.append(sum)
+    
+    plt.plot(x, y)
+    plt.show()
+            
+def GLenOutgoing(t):
+    itemp, inter = t.generate_server_inter_arrival_time()
+
+    clist = []
+    n = len(inter)
+    for i in range(n):
+        clist.append(float(inter[i][5]))
+    
+    clist.sort()
+    sum = 0
+    n = len(clist)
+    for i in range(n):
+        sum = sum + clist[i]
+    
+    mean = sum/n
+    median = clist[int(n/2)]
+    print("Mean of Outgoing Packet Length is: ",mean)
+    print("Median of Outgoing Packet Length is: ", median)
+
+    max_x = int(clist[n-1]) + 10
+    x = range(max_x)
+    y = []
+
+    for i in range(max_x):
+        sum = 0
+        for j in range(n):
+            if(clist[j] <= x[i]):
+                sum = sum + 1
+            else:
+                break
+        y.append(sum)
+    
+    plt.plot(x, y)
+    plt.show()
 
 
 
 temp = cv.fileReader("lbnl.anon-ftp.03-01-11.csv")
 
+#Qestion Number 1
+UServerIP(temp)
+print("------------------------------")
+UClientIP(temp)
+print("------------------------------")
+
+#Question Number 2
+UTCPFlow(temp)
+print("------------------------------")
+
+#Question Number 3
+PlotFlow(temp)
+print("------------------------------")
+
+# Question Number 4
+PlotConDur(temp)
+print("------------------------------")
+
+# Question Number 5
+
+# Question Number 6
+interarrivalCDF6(temp)
+print("------------------------------")
+
+# Question Number 7
+interarrivalCDF7(temp)
+print("------------------------------")
+
+# Question Number 8
 GLenIncoming(temp)
+print("------------------------------")
+GLenOutgoing(temp)
+print("------------------------------")
+
