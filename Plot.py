@@ -15,15 +15,18 @@ def Plotbar(x, y, labelx, labely, title, fsize = 5):
     plt.xticks(index, x, rotation = 30, fontsize = fsize)
     plt.show()
 
+# Question Number 1
 def UServerIP(t):
-    print(len(t.serverips))
+    print("Unique Number Server IPs are: ",len(t.serverips))
 
 def UClientIP(t):
-    print(len(t.clientips))
+    print("Unique Number Client IPs are: ",len(t.clientips))
 
+# Question Number 2
 def UTCPFlow(t):
-    print(len(t.tcpflows))
+    print("Unique Number TCP Flows are: ",len(t.tcpflows))
 
+# Question Number 3
 def PlotFlow(t):
 
     #X-axis of the graph
@@ -48,6 +51,7 @@ def PlotFlow(t):
 
     Plotbar(x, y, "Time of Day", "Number of Connections", "Number of connections opened to any FTP server")
 
+# Question Number 4
 def PlotConDur(t):
 
     # getting the list of keys
@@ -169,7 +173,7 @@ def interarrivalCDF7(t):
     print(mean)
     print(median)
 
-# Question number 8
+# Interarrival time of outgoing packet
 def interarrivalCDF8(t):
     itemp, inter_arrival = t.generate_server_inter_arrival_time()
 
@@ -216,7 +220,7 @@ def interarrivalCDF8(t):
     print(mean)
     print(median)
 
-
+# Question Number 8
 def GLenIncoming(t):
     inter, itemp = t.generate_server_inter_arrival_time()
 
@@ -233,11 +237,47 @@ def GLenIncoming(t):
 
     mean = sum/n
     median = clist[int(n/2)]
-    print("Mean of Incoming Length of the packet is: ",mean)
-    print("Median of Incoming Length of the packet is:", median)
+    print("Mean of Incoming Packet Length is: ",mean)
+    print("Median of Incoming Packet Length is: ", median)
 
-    max_x = clist[n-1]
+    max_x = int(clist[n-1]) + 10
     x = range(max_x)
+    y = []
+
+    for i in range(max_x):
+        sum = 0
+        for j in range(n):
+            if(clist[j] <= x[i]):
+                sum = sum + 1
+            else:
+                break
+        y.append(sum)
+
+    plt.plot(x, y)
+    plt.show()
+
+def GLenOutgoing(t):
+    itemp, inter = t.generate_server_inter_arrival_time()
+
+    clist = []
+    n = len(inter)
+    for i in range(n):
+        clist.append(float(inter[i][5]))
+
+    clist.sort()
+    sum = 0
+    n = len(clist)
+    for i in range(n):
+        sum = sum + clist[i]
+
+    mean = sum/n
+    median = clist[int(n/2)]
+    print("Mean of Outgoing Packet Length is: ",mean)
+    print("Median of Outgoing Packet Length is: ", median)
+
+    max_x = int(clist[n-1]) + 10
+    x = range(max_x)
+    y = []
 
 def question_5(t):
     _4_tuples = list(t.tcpflows.keys())
@@ -270,13 +310,59 @@ def question_5(t):
 #     print("After Removing Outliers, Pearson Coefficient b/w duration and Server: ",pearsonr(new_s_a,new_connection))
 #     plt.scatter(conn_duration,to_server_array)
     plt.scatter(to_server_array,to_client_array)
-    plt.scatter(new_s_a,new_c_a)    
+    plt.scatter(new_s_a,new_c_a)
 #     plt.scatter(to_server_array,conn_duration)
 
 
 
+for i in range(max_x):
+    sum = 0
+    for j in range(n):
+        if(clist[j] <= x[i]):
+            sum = sum + 1
+        else:
+            break
+    y.append(sum)
 
-temp = cv.fileReader("lbnl.anon-ftp.03-01-18.csv")
+plt.plot(x, y)
+plt.show()
 
-# GLenIncoming(temp)
-question_5(temp)
+
+
+temp = cv.fileReader("lbnl.anon-ftp.03-01-11.csv")
+
+#Qestion Number 1
+UServerIP(temp)
+print("------------------------------")
+UClientIP(temp)
+print("------------------------------")
+
+#Question Number 2
+UTCPFlow(temp)
+print("------------------------------")
+
+#Question Number 3
+PlotFlow(temp)
+print("------------------------------")
+
+# Question Number 4
+PlotConDur(temp)
+print("------------------------------")
+
+# Question Number 5
+
+# Question Number 6
+interarrivalCDF6(temp)
+print("------------------------------")
+
+# Question Number 7
+interarrivalCDF7(temp)
+print("------------------------------")
+
+# Question Number 8
+GLenIncoming(temp)
+print("------------------------------")
+GLenOutgoing(temp)
+print("------------------------------")
+
+>>>>>>> bcfb14b353644cbc889c334f3286350dc5bfd8a8
