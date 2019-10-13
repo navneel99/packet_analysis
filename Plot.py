@@ -167,7 +167,7 @@ def interarrivalCDF7(t):
 
 # Question number 8
 def interarrivalCDF8(t):
-    i, inter_arrival = t.generate_server_inter_arrival_time()
+    itemp, inter_arrival = t.generate_server_inter_arrival_time()
 
     clist = []
     
@@ -213,6 +213,31 @@ def interarrivalCDF8(t):
     print(median)
 
 
+def GLenIncoming(t):
+    inter, itemp = t.generate_server_inter_arrival_time()
+
+    clist = []
+    n = len(inter)
+    for i in range(n):
+        clist.append(float(inter[i][5]))
+    
+    clist.sort()
+    sum = 0
+    n = len(clist)
+    for i in range(n):
+        sum = sum + clist[i]
+    
+    mean = sum/n
+    median = clist[int(n/2)]
+    print("Mean of Incoming Length of the packet is: ",mean)
+    print("Median of Incoming Length of the packet is:", median)
+
+    max_x = clist[n-1]
+    x = range(max_x)
+
+
+
+
 temp = cv.fileReader("lbnl.anon-ftp.03-01-11.csv")
 
-interarrivalCDF7(temp)
+GLenIncoming(temp)
