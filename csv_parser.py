@@ -36,9 +36,6 @@ class fileReader:
                     self.tcpdata.append(x)
                 else:
                     self.ftpdata.append(x)
-            # self.rawdata = [x for x in data]
-            # self.tcpdata = [x if x[4] == "TCP" for x in data]
-            # self.ftpdata = [x if x[4] == "FTP" for x in data]
 
     def generate_inter_arrival_time(self):
         for row in self.tcpdata:
@@ -91,17 +88,17 @@ class fileReader:
                 server_ip = curr_row[3]
                 client_ip = curr_row[2]
 
-            # elif message[0] in ["RST","FIN"] and syn_flag == True:
-            elif message[0] == "FIN" and syn_flag == True:
+            elif message[0] in ["RST","FIN"] and syn_flag == True:
+            # elif message[0] == "FIN" and syn_flag == True:
                 syn_flag = False
                 times.append(float(curr_row[1]) - start_timer)
                 start_timer = 0
-            elif message[0] == "RST":
-                if (syn_flag):
-                    times.append(float(curr_row[1]) - start_timer)
-                    syn_flag = False
-                else:
-                    times[-1]+=(float(curr_row[1]) - start_timer)
+            # elif message[0] == "RST":
+            #     if (syn_flag):
+            #         times.append(float(curr_row[1]) - start_timer)
+            #         syn_flag = False
+            #     else:
+            #         times[-1]+=(float(curr_row[1]) - start_timer)
             else:
                 continue
         return times
@@ -149,7 +146,8 @@ class fileReader:
                 curr_bytes=int(curr_row[5])
                 curr_s_bytes = int(curr_row[5])
 
-            elif message[0] == "FIN" and syn_flag == True:
+            # elif message[0] == "FIN" and syn_flag == True:
+            elif message[0] in ["FIN","RST"] and syn_flag==True:
                 curr_bytes+=int(curr_row[5])
                 curr_c_bytes+=int(curr_row[5])
                 curr_s_bytes+=int(curr_row[5])
@@ -160,25 +158,25 @@ class fileReader:
                 curr_s_bytes = 0
                 curr_bytes = 0
                 syn_flag = False
-            elif message[0] == "RST":
-                curr_bytes+=int(curr_row[5])
-                curr_s_bytes+=int(curr_row[5])
-                curr_c_bytes+=int(curr_row[5])
-                if syn_flag: #Did not encounter FIN, ACK before, so new element
-                    bytes.append(curr_bytes)
-                    ser_bytes.append(curr_s_bytes)
-                    cl_bytes.append(curr_c_bytes)
-                else:   # WE had encountered FIN before, so add to the last element
-                    if (len(bytes) == 0): #Debugging code
-                        print(four_tuple)
-                    bytes[-1]+=curr_bytes
-                    ser_bytes[-1]+=curr_s_bytes
-                    cl_bytes[-1]+=curr_c_bytes
-
-                syn_flag = False
-                curr_bytes=0
-                curr_c_bytes=0
-                curr_s_bytes=0
+            # elif message[0] == "RST":
+            #     curr_bytes+=int(curr_row[5])
+            #     curr_s_bytes+=int(curr_row[5])
+            #     curr_c_bytes+=int(curr_row[5])
+            #     if syn_flag: #Did not encounter FIN, ACK before, so new element
+            #         bytes.append(curr_bytes)
+            #         ser_bytes.append(curr_s_bytes)
+            #         cl_bytes.append(curr_c_bytes)
+            #     else:   # WE had encountered FIN before, so add to the last element
+            #         if (len(bytes) == 0): #Debugging code
+            #             print(four_tuple)
+            #         bytes[-1]+=curr_bytes
+            #         ser_bytes[-1]+=curr_s_bytes
+            #         cl_bytes[-1]+=curr_c_bytes
+            #
+            #     syn_flag = False
+            #     curr_bytes=0
+            #     curr_c_bytes=0
+            #     curr_s_bytes=0
             else:
                 if (curr_row[2] == server):
                     curr_c_bytes+=int(curr_row[5])
