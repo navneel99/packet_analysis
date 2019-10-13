@@ -1,15 +1,29 @@
 import csv_parser as cv
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
+import os
 
-def Plotbar(x, y, labelx, labely, title, fsize = 5):
+def Plotbar(x, y, labelx, labely, title, save, fsize = 5):
     index = np.arange(len(x))
     plt.bar(index,y)
     plt.xlabel(labelx)
     plt.ylabel(labely)
     plt.title(title)
     plt.xticks(index, x, rotation = 30, fontsize = fsize)
-    plt.show()
+    plt.savefig(save)
+    plt.close()
+
+def Plot(x, y, labelx, labely, title, save, fsize = 5):
+    index = np.arange(len(x))
+    plt.plot(index,y)
+    plt.xlabel(labelx)
+    plt.ylabel(labely)
+    plt.title(title)
+    plt.xticks(index, x, rotation = 30, fontsize = fsize)
+    plt.savefig(save)
+    plt.close()
+
 
 # Question Number 1
 def UServerIP(t):
@@ -23,7 +37,7 @@ def UTCPFlow(t):
     print("Unique Number TCP Flows are: ",len(t.tcpflows))
 
 # Question Number 3
-def PlotFlow(t):
+def PlotFlow(t, save):
     
     #X-axis of the graph
     y = [0]*24
@@ -38,17 +52,10 @@ def PlotFlow(t):
             if(t < j+1 ):
                 y[j] = y[j] + 1
                 break
-    
-    # sum = 0
-    # for i in range(24):
-    #     sum = sum + x[i]
-    #     print(i,"=>",x[i])
-    # print(sum)
-
-    Plotbar(x, y, "Time of Day", "Number of Connections", "Number of connections opened to any FTP server")       
+    Plotbar(x, y, "Time of Day", "Number of Connections", "Number of connections opened to any FTP server", save)       
 
 # Question Number 4
-def PlotConDur(t):
+def PlotConDur(t, save):
 
     # getting the list of keys
     temp = t.tcpflows
@@ -61,7 +68,7 @@ def PlotConDur(t):
             y.append(duration[j])
 
     y.sort()
-    max_x = int(y[len(y)-1]+100)
+    max_x = int(y[len(y)-1]+5)
     x = range(max_x)
 
     n = len(y)
@@ -75,14 +82,14 @@ def PlotConDur(t):
             else:
                 yy[i] = yy[i] + 1
         yy[i] = yy[i]/n
+        print(yy[i])
+        if(yy[i] > 0.995):
+            break
     
-    print(len(x), len(yy))
-    print(y[len(y)-8])
-    plt.plot(x, yy)
-    plt.show()
+    Plot(x, yy, "P(Conn. Duration < X)", "Connection Duration (sec)", "CDF of the connection duration", save)
 
 #Question number 6
-def interarrivalCDF6(t):
+def interarrivalCDF6(t, save):
     inter_arrival = t.new_connection_time
 
     y = []
@@ -117,13 +124,12 @@ def interarrivalCDF6(t):
         CDF[i] = count
 
     x = range(max_x)
-    plt.plot(x,CDF)
-    plt.show()
+    Plot(x, CDF, "P(inter-arrival time<X)", "Inter arrival Time(sec)", "CDF of Inter Arrival time", save)
 
     return y
 
 # Question number 7
-def interarrivalCDF7(t):
+def interarrivalCDF7(t, save):
     inter_arrival, t = t.generate_server_inter_arrival_time()
 
     clist = []
@@ -162,15 +168,14 @@ def interarrivalCDF7(t):
                 break
         CDF[i] = count
 
-    x = range(max_x)
-    plt.plot(x,CDF)
-    plt.show()
-    # print(sum)
     print(mean)
     print(median)
 
+    x = range(max_x)
+    Plot(x, CDF, "P(inter-arrival time<X)", "Inter arrival Time(sec)", "CDF of Inter Arrival time", save)
+
 # Interarrival time of outgoing packet
-def interarrivalCDF8(t):
+def interarrivalCDF8(t, save):
     itemp, inter_arrival = t.generate_server_inter_arrival_time()
 
     clist = []
@@ -217,7 +222,7 @@ def interarrivalCDF8(t):
     print(median)
 
 # Question Number 8
-def GLenIncoming(t):
+def GLenIncoming(t, save):
     inter, itemp = t.generate_server_inter_arrival_time()
 
     clist = []
@@ -249,10 +254,9 @@ def GLenIncoming(t):
                 break
         y.append(sum)
     
-    plt.plot(x, y)
-    plt.show()
+    Plot(x, y, "P(inter-arrival time<X)", "Inter arrival Time(sec)", "CDF of Inter Arrival time of Incoming Packet", save)    
             
-def GLenOutgoing(t):
+def GLenOutgoing(t, save):
     itemp, inter = t.generate_server_inter_arrival_time()
 
     clist = []
@@ -284,44 +288,68 @@ def GLenOutgoing(t):
                 break
         y.append(sum)
     
-    plt.plot(x, y)
-    plt.show()
+    Plot(x, y, "P(inter-arrival time<X)", "Inter arrival Time(sec)", "CDF of Inter Arrival time of Outgoing Packet", save)    
 
 
+program_name = sys.argv[0]
+n = int(sys.argv[1])
+m = int(sys.argv[2])
+if n == 1:
+    temp = cv.fileReader("lbnl.anon-ftp.03-01-11.csv")
+else:
+    if n == 2:
+        temp = cv.fileReader("lbnl.anon-ftp.03-01-14.csv")
+    else:
+        temp = cv.fileReader("lbnl.anon-ftp.03-01-18.csv")
 
-temp = cv.fileReader("lbnl.anon-ftp.03-01-11.csv")
+if m == 1 :
+    #Qestion Number 1
+    UServerIP(temp)
+    print("------------------------------")
+    UClientIP(temp)
+    print("------------------------------")
 
-#Qestion Number 1
-UServerIP(temp)
-print("------------------------------")
-UClientIP(temp)
-print("------------------------------")
+if m == 2:
+    #Question Number 2
+    UTCPFlow(temp)
+    print("------------------------------")
 
-#Question Number 2
-UTCPFlow(temp)
-print("------------------------------")
+if m == 3:
+    #Question Number 3
+    save = "Q3"+str(n)+".png"
+    PlotFlow(temp, save)
+    print("------------------------------")
 
-#Question Number 3
-PlotFlow(temp)
-print("------------------------------")
+if m == 4:
+    # Question Number 4
+    print(4)
+    save = "Q4"+str(n)+".png"
+    PlotConDur(temp, save)
+    print("------------------------------")
 
-# Question Number 4
-PlotConDur(temp)
-print("------------------------------")
+if m == 5:
+    # Question Number 5
+    print("------------------------------")
+    
 
-# Question Number 5
+if m == 6:
+    # Question Number 6
+    save = "Q6"+str(n)+".png"
+    interarrivalCDF6(temp, save)
+    print("------------------------------")
 
-# Question Number 6
-interarrivalCDF6(temp)
-print("------------------------------")
+if m == 7:
+    # Question Number 7
+    save = "Q7"+str(n)+".png"
+    interarrivalCDF7(temp, save)
+    print("------------------------------")
 
-# Question Number 7
-interarrivalCDF7(temp)
-print("------------------------------")
-
-# Question Number 8
-GLenIncoming(temp)
-print("------------------------------")
-GLenOutgoing(temp)
-print("------------------------------")
+if m == 8:
+    # Question Number 8
+    save = "Q8"+str(n)+"1.png"
+    GLenIncoming(temp, save)
+    print("------------------------------")
+    save = "Q8"+str(n)+"2.png"
+    GLenOutgoing(temp, save)
+    print("------------------------------")
 
