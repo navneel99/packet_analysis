@@ -11,15 +11,18 @@ def Plotbar(x, y, labelx, labely, title, fsize = 5):
     plt.xticks(index, x, rotation = 30, fontsize = fsize)
     plt.show()
 
+# Question Number 1
 def UServerIP(t):
-    print("Unique Server IPs are: ",len(t.serverips))
+    print("Unique Number Server IPs are: ",len(t.serverips))
 
 def UClientIP(t):
-    print("Unique Client IPs are: ",len(t.clientips))
+    print("Unique Number Client IPs are: ",len(t.clientips))
 
+# Question Number 2
 def UTCPFlow(t):
-    print("Unique TCP Flows are: ",len(t.tcpflows))
+    print("Unique Number TCP Flows are: ",len(t.tcpflows))
 
+# Question Number 3
 def PlotFlow(t):
     
     #X-axis of the graph
@@ -44,6 +47,7 @@ def PlotFlow(t):
 
     Plotbar(x, y, "Time of Day", "Number of Connections", "Number of connections opened to any FTP server")       
 
+# Question Number 4
 def PlotConDur(t):
 
     # getting the list of keys
@@ -212,6 +216,7 @@ def interarrivalCDF8(t):
     print(mean)
     print(median)
 
+# Question Number 8
 def GLenIncoming(t):
     inter, itemp = t.generate_server_inter_arrival_time()
 
