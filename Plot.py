@@ -364,5 +364,3 @@ GLenIncoming(temp)
 print("------------------------------")
 GLenOutgoing(temp)
 print("------------------------------")
-
->>>>>>> bcfb14b353644cbc889c334f3286350dc5bfd8a8
