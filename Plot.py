@@ -279,6 +279,18 @@ def GLenOutgoing(t):
     x = range(max_x)
     y = []
 
+    for i in range(max_x):
+        sum = 0
+        for j in range(n):
+            if(clist[j] <= x[i]):
+                sum = sum + 1
+            else:
+                break
+        y.append(sum)
+
+    plt.plot(x, y)
+    plt.show()
+
 def question_5(t):
     _4_tuples = list(t.tcpflows.keys())
     bytes_interchanged = []
@@ -312,20 +324,6 @@ def question_5(t):
     plt.scatter(to_server_array,to_client_array)
     plt.scatter(new_s_a,new_c_a)
 #     plt.scatter(to_server_array,conn_duration)
-
-
-
-for i in range(max_x):
-    sum = 0
-    for j in range(n):
-        if(clist[j] <= x[i]):
-            sum = sum + 1
-        else:
-            break
-    y.append(sum)
-
-plt.plot(x, y)
-plt.show()
 
 
 
