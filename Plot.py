@@ -81,14 +81,11 @@ def PlotConDur(t, save):
 
     for i in range(max_x):
         for j in range(n):
-            if(y[j]>i):
+            if(y[j]>=i):
                 break
             else:
                 yy[i] = yy[i] + 1
         yy[i] = yy[i]/n
-        print(yy[i])
-        if(yy[i] > 0.995):
-            break
     
     Plot(x, yy, "P(Conn. Duration < X)", "Connection Duration (sec)", "CDF of the connection duration", save)
 
@@ -135,6 +132,8 @@ def interarrivalCDF6(t, save):
         y.append(temp)
 
     y.sort()
+    yp = np.array(y)
+    np.savetxt(save + ".csv", yp, delimiter=",")
 
     sum = 0
     n = len(y)
@@ -160,7 +159,7 @@ def interarrivalCDF6(t, save):
         CDF[i] = count
 
     x = range(max_x)
-    Plot(x, CDF, "P(inter-arrival time<X)", "Inter arrival Time(sec)", "CDF of Inter Arrival time", save)
+    Plot(x, CDF, "P(inter-arrival time<X)", "Inter arrival Time(sec)", "CDF of Inter Arrival time", save+".png")
 
     return y
 
@@ -183,6 +182,8 @@ def interarrivalCDF7(t, save):
         y.append(temp)
 
     y.sort()
+    yp = np.array(y)
+    np.savetxt(save + ".csv", yp, delimiter=",")
 
     sum = 0
     n = len(y)
@@ -208,7 +209,7 @@ def interarrivalCDF7(t, save):
     print(median)
 
     x = range(max_x)
-    Plot(x, CDF, "P(inter-arrival time<X)", "Inter arrival Time(sec)", "CDF of Inter Arrival time", save)
+    Plot(x, CDF, "P(inter-arrival time<X)", "Inter arrival Time(sec)", "CDF of Inter Arrival time", save + ".png")
 
 # Interarrival time of outgoing packet
 def interarrivalCDF8(t, save):
@@ -365,18 +366,18 @@ if m == 4:
 
 if m == 5:
     # Question Number 5
+    question_5(temp)
     print("------------------------------")
     
-
 if m == 6:
     # Question Number 6
-    save = "Q6"+str(n)+".png"
+    save = "Q6"+str(n)
     interarrivalCDF6(temp, save)
     print("------------------------------")
 
 if m == 7:
     # Question Number 7
-    save = "Q7"+str(n)+".png"
+    save = "Q7"+str(n)
     interarrivalCDF7(temp, save)
     print("------------------------------")
 
