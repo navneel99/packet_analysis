@@ -49,7 +49,7 @@ class fileReader:
         # l = [row if (row[3] in self.serverips) else continue for row in self.new_connection_time]
         siat=[] #server inter arrvial time
         op = [] # Outgoing packet
-        for row in self.rawdata:
+        for row in self.tcpdata:
             if row[3] in self.serverips:
                 siat.append(row)
             if row[2] in self.serverips:

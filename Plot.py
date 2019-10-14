@@ -384,11 +384,11 @@ if m == 7:
     print("------------------------------")
 
 if m == 8:
-    # # Question Number 8
-    # save = "Q8"+str(n)+"1.png"
-    # GLenIncoming(temp, save)
-    # print("------------------------------")
-    save = "Q8"+str(n)+"2.png"
-    GLenOutgoing(temp, save)
+    # Question Number 8
+    save = "Q8"+str(n)+"1.png"
+    GLenIncoming(temp, save)
     print("------------------------------")
+    # save = "Q8"+str(n)+"2.png"
+    # GLenOutgoing(temp, save)
+    # print("------------------------------")
 
