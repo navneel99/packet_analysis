@@ -119,7 +119,9 @@ def question_5(t):
             new_connection.append(conn_duration[i])
     print("After Removing Outliers, Pearson Coefficient b/w to and from Server: ",pearsonr(new_s_a,new_c_a))
     plt.scatter(to_server_array,to_client_array)
+    # plt.savefig("Q531.png")
     plt.scatter(new_s_a,new_c_a)
+    # plt.savefig("Q532.png")
 
 #Question number 6
 def interarrivalCDF6(t, save):
@@ -187,7 +189,7 @@ def interarrivalCDF7(t, save):
 
     sum = 0
     n = len(y)
-    print(y[n-1])
+    # print(y[n-1])
     for i in range(n):
         sum = sum + y[i]
 
@@ -382,10 +384,10 @@ if m == 7:
     print("------------------------------")
 
 if m == 8:
-    # Question Number 8
-    save = "Q8"+str(n)+"1.png"
-    GLenIncoming(temp, save)
-    print("------------------------------")
+    # # Question Number 8
+    # save = "Q8"+str(n)+"1.png"
+    # GLenIncoming(temp, save)
+    # print("------------------------------")
     save = "Q8"+str(n)+"2.png"
     GLenOutgoing(temp, save)
     print("------------------------------")

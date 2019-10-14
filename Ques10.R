@@ -1,7 +1,7 @@
 library("fitdistrplus")
 
-ia_packet_times <- read.csv("Q71.csv")$X  #or whatever column name you have Question 7 output
-ia_conn_times <- read.csv("Q61.csv")$X 
+ia_packet_times <- read.csv("Q73.csv")$X  #or whatever column name you have Question 7 output
+ia_conn_times <- read.csv("Q63.csv")$X 
 
 head(ia_packet_times)
 
@@ -46,6 +46,7 @@ plot(fe)
 
 
 # Question 11
+library("ggplot2")
 
 queue_size <- function (lambda, mu) {
   return (lambda/(mu - lambda))
